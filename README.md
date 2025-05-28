@@ -1,2 +1,3 @@
-# music analysis app
-An app to analyze a piece of recorded music in the Hindustani vocal music style and provide feedback to beginning students on whether they are singing correctly, or if not, how they should correct themselves
+# AI Music Generation and Analysis
+
+This project aims to explore AI techniques for music generation and analysis. It will include modules for analyzing music features and potentially a web application to showcase the generated music.
