@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Pitch Analysis Results</title>
+</head>
+<body>
+    <h1>Pitch Analysis Results</h1>
+    <h2>Pitches (F0 in Hz)</h2>
+    <pre>{{ pitches_str }}</pre>
+    <h2>Voiced Flags</h2>
+    <pre>{{ voiced_flags_str }}</pre>
+    <br>
+    <a href="{{ url_for('index') }}">Upload another file</a>
+</body>
+</html>
