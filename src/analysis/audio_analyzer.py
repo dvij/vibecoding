@@ -57,14 +57,14 @@ def load_and_extract_pitch(audio_path: str):
     try:
         f0, voiced_flags, voiced_probs = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'))
         drone_section = f0[:int(2 * sr / 512)]  # First 2 seconds
-        drone_freq = np.median(drone_section[voiced_flag[:len(drone_section)]])
+        drone_freq = np.median(drone_section[voiced_flags[:len(drone_section)]])
         
         # Create arrays with same shape as f0
         relative_cents = np.full_like(f0, np.nan)  # Array of cents, NaN for unvoiced
         relative_notes = np.full(f0.shape, None, dtype=object)  # Array of note names, None for unvoiced
         
         # Calculate relative intervals for all frames
-        for i, (freq, is_voiced) in enumerate(zip(f0, voiced_flag)):
+        for i, (freq, is_voiced) in enumerate(zip(f0, voiced_flags)):
             if is_voiced and not np.isnan(freq):
                 cents = freq_to_cents(freq, drone_freq)
                 note_name = cents_to_note_name(cents)
