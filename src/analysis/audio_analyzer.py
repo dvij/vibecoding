@@ -3,6 +3,27 @@ This module provides functions for analyzing audio files.
 """
 import librosa
 
+
+def freq_to_cents(freq, reference_freq):
+    """Convert frequency ratio to cents (1200 cents = 1 octave)"""
+    return 1200 * np.log2(freq / reference_freq)
+
+def cents_to_note_name(cents):
+    """Convert cents from reference to note name"""
+    # Chromatic scale starting from reference (0 cents)
+    note_names = ['Unison', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7']
+    
+    # Convert to semitones (100 cents = 1 semitone)
+    semitones = round(cents / 100)
+    octaves = semitones // 12
+    note_idx = semitones % 12
+    
+    if octaves == 0:
+        return note_names[note_idx]
+    else:
+        return f"{note_names[note_idx]} (+{octaves} oct)" if octaves > 0 else f"{note_names[note_idx]} ({octaves} oct)"
+
+
 def load_and_extract_pitch(audio_path: str):
     """
     Loads an audio file and extracts pitch information using librosa.
@@ -33,8 +54,20 @@ def load_and_extract_pitch(audio_path: str):
         raise Exception(f"Error loading audio file {audio_path}: {e}")
 
     try:
-        pitches, voiced_flags, voiced_probs = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'))
-    except Exception as e:
-        raise Exception(f"Error extracting pitch from {audio_path}: {e}")
+        f0, voiced_flag, voiced_probs = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'))
+        drone_section = f0[:int(2 * sr / 512)]  # First 2 seconds
+        drone_freq = np.median(drone_section[voiced_flag[:len(drone_section)]])
         
-    return pitches, voiced_flags, voiced_probs
+        # Create arrays with same shape as f0
+        relative_cents = np.full_like(f0, np.nan)  # Array of cents, NaN for unvoiced
+        relative_notes = np.full(f0.shape, None, dtype=object)  # Array of note names, None for unvoiced
+        
+        # Calculate relative intervals for all frames
+        for i, (freq, is_voiced) in enumerate(zip(f0, voiced_flag)):
+            if is_voiced and not np.isnan(freq):
+                cents = freq_to_cents(freq, drone_freq)
+                note_name = cents_to_note_name(cents)
+                relative_cents[i] = cents
+                relative_notes[i] = note_name
+                
+        return relative_notes, voiced_flags, voiced_probs
