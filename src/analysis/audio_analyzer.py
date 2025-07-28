@@ -71,3 +71,5 @@ def load_and_extract_pitch(audio_path: str):
                 relative_notes[i] = note_name
                 
         return relative_notes, voiced_flags, voiced_probs
+    except Exception as e:
+        raise Exception(f"Error processing notes for audio file {audio_path}: {e}")
