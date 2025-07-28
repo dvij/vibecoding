@@ -11,10 +11,15 @@ def load_and_extract_pitch(audio_path: str):
         audio_path: Path to the audio file.
 
     Returns:
-        A tuple containing:
-            - pitches: Array of fundamental frequencies (F0) in Hz.
-            - voiced_flags: Boolean array indicating whether each frame is voiced.
-            - voiced_probs: Array of probabilities for each frame being voiced.
+        A tuple containing three numpy arrays:
+            - pitches (np.ndarray): An array of fundamental frequencies (F0) in Hertz (Hz)
+              for each frame. Values can be `np.nan` if the frame is unvoiced or if
+              pitch detection is uncertain.
+            - voiced_flags (np.ndarray): A boolean array. `True` for frames where pitched
+              (voiced) sound is detected, `False` for frames considered unvoiced.
+            - voiced_probs (np.ndarray): An array of probabilities (between 0.0 and 1.0)
+              representing the likelihood that each frame is voiced. Higher values
+              indicate greater confidence in the presence of a voiced signal.
     
     Raises:
         FileNotFoundError: If the audio file is not found.

@@ -6,9 +6,22 @@
 </head>
 <body>
     <h1>Pitch Analysis Results</h1>
+
     <h2>Pitches (F0 in Hz)</h2>
+    <p>
+        This shows the estimated fundamental frequency (F0), or perceived pitch, for short segments (frames) of the audio, measured in Hertz (Hz).
+        It's a time series, so you can see how the pitch changes over the duration of the audio.
+        <code>nan</code> (Not a Number) typically indicates that no clear pitch was detected in that frame (it might be silence or unvoiced sound).
+    </p>
     <pre>{{ pitches_str }}</pre>
+
     <h2>Voiced Flags</h2>
+    <p>
+        This is an array of <code>True</code> or <code>False</code> values, corresponding to each frame in the 'Pitches' array above.
+        <code>True</code> means the frame is considered "voiced" (e.g., a sung note, a vowel sound).
+        <code>False</code> means the frame is considered "unvoiced" (e.g., silence, breath, or consonants like 's', 't').
+        Frames marked <code>False</code> here usually correspond to <code>nan</code> values in the 'Pitches' array.
+    </p>
     <pre>{{ voiced_flags_str }}</pre>
     <br>
     <a href="{{ url_for('index') }}">Upload another file</a>
