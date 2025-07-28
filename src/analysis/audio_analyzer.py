@@ -55,7 +55,7 @@ def load_and_extract_pitch(audio_path: str):
         raise Exception(f"Error loading audio file {audio_path}: {e}")
 
     try:
-        f0, voiced_flag, voiced_probs = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'))
+        f0, voiced_flags, voiced_probs = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'))
         drone_section = f0[:int(2 * sr / 512)]  # First 2 seconds
         drone_freq = np.median(drone_section[voiced_flag[:len(drone_section)]])
         
