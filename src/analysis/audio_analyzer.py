@@ -2,6 +2,7 @@
 This module provides functions for analyzing audio files.
 """
 import librosa
+import numpy as np
 
 
 def freq_to_cents(freq, reference_freq):
